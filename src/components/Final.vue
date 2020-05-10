@@ -27,14 +27,33 @@
         </q-item>
       </q-list>
     </div>
+    <div>
+      <h5>Zadajte váhu konečného balíka v kilogramoch</h5>
+      <q-input v-model="weight" label="Váha v Kg" />
+      <hr>
+      <q-btn color="deep-orange" glossy label="Odoslať kuriérskej službe" @click="send"/>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: ['user', 'preparedItems', 'discard'],
-  created() {
-
+  data () {
+    return {
+      weight: 0
+    }
+  },
+  methods: {
+    send() {
+      console.log(this.weight)
+      let x = Number(this.weight)
+      if (typeof x != 'number' || Object.is(x, NaN) || this.weight <= 0) {
+        alert('zadajte validnú váhu')
+        return
+      }
+      this.$emit('send', this.weight)
+    }
   }
 }
 </script>

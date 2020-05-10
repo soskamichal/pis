@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Vaša objednávka</h3>
+    <h3>Zmeny vo vašej objednávke</h3>
     <hr>
     <q-list bordered separator>
       <div v-for="(item, index) in toConfirm" :key="index" v-bind:class="{ ready: styles[index] === 1, unavailable: styles[index] === 2 }">
@@ -68,7 +68,7 @@ export default {
           discard.push(this.toConfirm[i].altItem)
         }
       }
-      console.log('orders disc', discard)
+      console.log('orders conf', out)
       this.$emit('confirmAlts', out, discard)
     }
   }

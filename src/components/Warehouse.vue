@@ -50,7 +50,7 @@
           <p v-if="item.style === 1">Pôvodná položka: {{ item.name._text }}</p>
         </q-item-section>
         <q-item-section>
-          <q-btn color="red" icon="clear" @click="unset(index)"/>
+          <!-- <q-btn color="red" icon="clear" @click="unset(index)"/> -->
         </q-item-section>
       </q-item>
     </q-list>
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+const cloneDeep = require('clone-deep');
+
 export default {
   props: ['itemsProp', 'userProp'],
   data () {
@@ -67,7 +69,9 @@ export default {
       allItems: [],
       orderedItems: [],
       preparedItems: [],
+      available: [],
       toConfirm: [],
+      denied: [],
       alts: []
     }
   },
@@ -84,7 +88,7 @@ export default {
       for (let j = 0; j < this.allItems.length; j++) {
         if (this.orderedItems[i].alt._text == this.allItems[j].id._text) {
           this.orderedItems[i].showAlt = 0
-          this.orderedItems[i].altItem = this.allItems[j]
+          this.orderedItems[i].altItem = cloneDeep(this.allItems[j])
           this.orderedItems[i].altItem.amount = this.allItems[j].amount
           break
         }
@@ -97,6 +101,7 @@ export default {
       item.state = 'Pripravené'
       item.style = 0
       this.preparedItems.push(item)
+      this.available.push(cloneDeep(item))
       this.orderedItems.splice(index, 1)
       this.alts.splice(index, 1)
     },
@@ -110,6 +115,7 @@ export default {
       item.state = 'Nedostupné'
       item.style = 2
       this.preparedItems.push(item)
+      this.denied.push(cloneDeep(item))
       this.orderedItems.splice(index, 1)
       this.alts.splice(index, 1)
     },
@@ -118,7 +124,7 @@ export default {
       item.state = 'Alternatíva'
       item.style = 1
       this.preparedItems.push(item)
-      this.toConfirm.push(item)
+      this.toConfirm.push(cloneDeep(item))
       this.orderedItems.splice(index, 1)
       this.alts.splice(index, 1)
     },
@@ -137,7 +143,7 @@ export default {
           len--
         }
       }
-      this.$emit('orderPrepared', this.preparedItems, this.toConfirm)
+      this.$emit('orderPrepared', this.available, this.toConfirm, this.denied)
     }
   }
 }

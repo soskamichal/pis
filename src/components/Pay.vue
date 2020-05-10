@@ -312,7 +312,11 @@ export default {
     },
     done() {
       alert('Objednávka bola potvrdená')
-      this.$emit('done')
+      let shop = 0
+      if (this.tab == 'shop') {
+        shop = 'shop'
+      }
+      this.$emit('done', shop)
     }
   }
 }

@@ -18,7 +18,8 @@
           <pay v-if="stage === 3" :user="user" :items="items" :currency="currency" @done="done"/>
           <ware v-if="stage === 4" :user="user" :itemsProp="items" :userProp="user" @orderPrepared="orderPrepared"/>
           <order v-if="stage === 5" :toConfirmProp="toConfirm" @confirmAlts="confirmAlts" />
-          <final v-if="stage === 6" :user="user" :preparedItems="preparedItems" :discard="discard" />
+          <final v-if="stage === 6" :user="user" :preparedItems="preparedItems" :discard="discard" @send="send"/>
+          <done v-if="stage === 7" :weight="weight" :preparedItems="preparedItems"/>
         </q-page>
       </div>
     </q-page-container>
@@ -34,6 +35,7 @@ export default {
       user: '',
       items: '',
       currency: '',
+      weight: 0,
       discard: [],
       preparedItems: [],
       toConfirm: []
@@ -45,7 +47,8 @@ export default {
     pay: require('components/Pay.vue').default,
     ware: require('components/Warehouse.vue').default,
     order: require('components/Orders.vue').default,
-    final: require('components/Final.vue').default
+    final: require('components/Final.vue').default,
+    done: require('components/Done.vue').default
   },
   methods: {
     login (user) {
@@ -57,39 +60,42 @@ export default {
       this.currency = currency
       this.stage = 3
     },
-    done () {
+    done (x) {
       this.title = 'Interný systém pobočky'
+      this.weight = x
       this.stage = 4
     },
-    orderPrepared(preparedItems, toConfirm) {
-      this.preparedItems = preparedItems
-      for (let i = 0; i < this.preparedItems.length; i++) {
-        if (this.preparedItems[i].style === 2) {
-          this.discard.push(this.preparedItems[i])
-          this.preparedItems.splice(i, 1)
-        } else if (this.preparedItems[i].style === 1) {
-          this.preparedItems.splice(i, 1)
-        }
-      }
-      console.log('po pripraveni', this.preparedItems)
+    orderPrepared(available, toConfirm, denied) {
+      this.preparedItems = available
       this.toConfirm = toConfirm
+      this.discard = denied
       if (this.toConfirm.length > 0) {
         this.stage = 5
         this.title = 'E-shop Správa objednávok'
+      } else if (this.preparedItems.length === 0) {
+        this.title = 'E-shop Správa objednávok'
+        this.stage = 7
       } else {
+      this.title = 'Interný systém pobočky'
         this.stage = 6
       }
     },
     confirmAlts(out, discard) {
-      console.log('index discard', discard)
-      if (this.discard.length === 0) {
-        this.discard = discard
-      } else {
-        this.preparedItems.concat(out)
+      this.discard = this.discard.concat(discard)
+      this.preparedItems = this.preparedItems.concat(out)
+      if (this.preparedItems.length === 0) {
+        this.title = 'E-shop Správa objednávok'
+        this.stage = 7
       }
-      this.discard.concat(discard)
       this.title = 'Interný systém pobočky'
       this.stage = 6
+    },
+    send(weight) {
+      if (this.weight === 0) {
+        this.weight = weight
+      }
+      this.title = 'E-shop Správa objednávok'
+      this.stage = 7
     },
     back () {
       if (this.stage > 1) this.stage--
