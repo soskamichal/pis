@@ -59,7 +59,6 @@ export default {
       .then(result => {
         result = JSON.parse(convert.xml2json(result, {compact: true, spaces: 2}));
         result = result["SOAP-ENV:Envelope"]["SOAP-ENV:Body"]["ns1:getAllResponse"].productss.product
-        console.log(result)
         this.items = result
       })
       .catch(error => console.log('error', error));
@@ -81,7 +80,6 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         this.items[i].amount = this.amount[i]
       }
-      console.log('kosik na zaplatenie', this.items)
       this.$emit('pay', this.items, this.curr)
     }
   }
