@@ -15,16 +15,18 @@
         <h3>Košík</h3>
         <hr>
         <q-list bordered separator>
-          <q-item v-for="(item, index) in items" :key="index">
-            <q-item-section>
-              <q-item-label>{{ item.name._text }}</q-item-label>
-              <q-item-label caption>{{item.price._text}} EUR</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ item.amount }}</q-item-label>
-              <q-item-label caption>Spolu: {{ Math.round(Number(item.price._text) * item.amount * 100) / 100 }} EUR</q-item-label>
-            </q-item-section>
-          </q-item>
+          <div v-for="(item, index) in items" :key="index">
+            <q-item v-if="item.amount > 0">
+              <q-item-section>
+                <q-item-label>{{ item.name._text }}</q-item-label>
+                <q-item-label caption>{{item.price._text}} EUR</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ item.amount }}</q-item-label>
+                <q-item-label caption>Spolu: {{ Math.round(Number(item.price._text) * item.amount * 100) / 100 }} EUR</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
         </q-list>
         <hr>
         <h5 style="margin-bottom: 5px">Spolu: {{ sum }} EUR</h5>
@@ -188,7 +190,9 @@ export default {
   },
   created () {
     var convert = require('xml-js');
-    for (let i = 0; i < this.items.length; i++) {
+    let len = this.items.length
+
+    for (let i = 0; i < len; i++) {
       this.sum += Number(this.items[i].price._text) * this.items[i].amount
     }
     this.sum = Math.round(this.sum * 100) / 100

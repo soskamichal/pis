@@ -27,15 +27,15 @@ export default {
   },
   created () {
     let count = 0
-    if (!this.weight.localeCompare('shop')) {
-      this.courier = 'na vami vybranú pobočku'
-      return
-    }
     for (let i = 0; i < this.preparedItems.length; i++) {
       count += this.preparedItems[i].amount
     }
     if (count === 0) {
       this.status = 2
+      return
+    }
+    if (!this.weight.localeCompare('shop')) {
+      this.courier = 'na vami vybranú pobočku'
       return
     }
     if (count < 20 && this.weight < 10) {

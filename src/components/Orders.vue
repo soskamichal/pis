@@ -63,6 +63,7 @@ export default {
       for (let i = 0; i < this.toConfirm.length; i++) {
         if (this.confirmed[i] === 1) {
           let item = this.toConfirm[i].altItem
+          item.amount = this.toConfirm[i].amount
           out.push(item)
         } else {
           discard.push(this.toConfirm[i].altItem)
