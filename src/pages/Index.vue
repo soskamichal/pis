@@ -53,15 +53,17 @@ export default {
   methods: {
     login (user) {
       this.user = user
+      this.title = 'Eshop (zákazník)'
       this.stage = 2
     },
     pay (items, currency) {
       this.items = items
       this.currency = currency
+      this.title = 'Eshop (zákazník)'
       this.stage = 3
     },
     done (x) {
-      this.title = 'Interný systém pobočky'
+      this.title = 'Interný systém pobočky (skladník)'
       this.weight = x
       this.stage = 4
     },
@@ -71,12 +73,12 @@ export default {
       this.discard = denied
       if (this.toConfirm.length > 0) {
         this.stage = 5
-        this.title = 'E-shop Správa objednávok'
+        this.title = 'E-shop Správa objednávok (zákazník)'
       } else if (this.preparedItems.length === 0) {
-        this.title = 'E-shop Správa objednávok'
+        this.title = 'E-shop Správa objednávok (zákazník)'
         this.stage = 7
       } else {
-      this.title = 'Interný systém pobočky'
+      this.title = 'Interný systém pobočky (pokladník)'
         this.stage = 6
       }
     },
@@ -84,17 +86,17 @@ export default {
       this.discard = this.discard.concat(discard)
       this.preparedItems = this.preparedItems.concat(out)
       if (this.preparedItems.length === 0) {
-        this.title = 'E-shop Správa objednávok'
+        this.title = 'E-shop Správa objednávok (zákazník)'
         this.stage = 7
       }
-      this.title = 'Interný systém pobočky'
+      this.title = 'Interný systém pobočky (pokladník)'
       this.stage = 6
     },
     send(weight) {
       if (this.weight === 0) {
         this.weight = weight
       }
-      this.title = 'E-shop Správa objednávok'
+      this.title = 'E-shop Správa objednávok (zákazník)'
       this.stage = 7
     },
     back () {

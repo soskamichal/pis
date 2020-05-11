@@ -41,7 +41,7 @@ export default {
     if (count < 20 && this.weight < 10) {
       this.courier = 'Cyklokuriérom'
     }
-    if (Math.random() < 0.7) {
+    if (1) {
       this.status = 1
     }
   },
